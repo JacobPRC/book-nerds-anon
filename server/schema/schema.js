@@ -254,6 +254,16 @@ const mutation = new GraphQLObjectType({
         });
       },
     },
+    addGenre: {
+      type: GenreType,
+      args: {
+        genre: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parentValue, { genre, description }) {
+        return new Genre({ genre, description }).save();
+      },
+    },
   },
 });
 
