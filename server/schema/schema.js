@@ -49,15 +49,19 @@ const BookType = new GraphQLObjectType({
       },
     },
     comments: {
-      type: CommentType,
+      type: new GraphQLList(CommentType),
       resolve(parentValue, args) {
-        return Book.findById(parentValue.id).populate("comments");
+        return Book.findById(parentValue.id)
+          .populate("comments")
+          .then((book) => book.comments);
       },
     },
     paragraphs: {
-      type: ParagraphType,
+      type: new GraphQLList(ParagraphType),
       resolve(parentValue, args) {
-        return Book.findById(parentValue.id).populate("paragraph");
+        return Book.findById(parentValue.id)
+          .populate("paragraph")
+          .then((book) => book.paragraphs);
       },
     },
   }),
@@ -96,9 +100,11 @@ const ParagraphType = new GraphQLObjectType({
       resolve: () => new Date(),
     },
     comments: {
-      type: CommentType,
+      type: new GraphQLList(CommentType),
       resolve(parentValue, args) {
-        Paragraph.findById(parentValue.id).populate("comments");
+        Paragraph.findById(parentValue.id)
+          .populate("comments")
+          .then((p) => p.comments);
       },
     },
   }),
@@ -262,6 +268,22 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, { genre, description }) {
         return new Genre({ genre, description }).save();
+      },
+    },
+    addCommentToBook: {
+      type: BookType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        comment: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parentValue, { id, comment }) {
+        return new Comment({ comment }).save().then((comment) => {
+          return Book.findByIdAndUpdate(
+            id,
+            { $push: { comments: comment._id } },
+            { new: true, useFindAndModify: false }
+          );
+        });
       },
     },
   },
