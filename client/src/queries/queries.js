@@ -4,10 +4,8 @@ export const FETCH_BOOKS = gql`
   {
     books {
       title
-      genre
       id
       createdAt
-      likes
     }
   }
 `;

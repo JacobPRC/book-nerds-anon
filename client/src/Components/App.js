@@ -5,11 +5,13 @@ import HomePage from "./HomePage";
 import BookDetails from "./BookDetails";
 import NewBookForm from "./NewBookForm";
 import BookList from "./BookList";
+import Header from "./Header";
 
 export default () => {
   return (
     <div>
       <BrowserRouter>
+        <Header />
         <Switch>
           <Route path="/" exact component={HomePage} />
           <Route path="/books" exact component={BookList} />
