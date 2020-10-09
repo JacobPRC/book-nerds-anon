@@ -97,11 +97,11 @@ export const EDIT_BOOK_COMMENT = gql`
 `;
 
 export const DELETE_BOOK_COMMENT = gql`
-mutation DeleteBookComment($id: ID!, bookId: ID!){
-    deleteBookComment(id: $id, bookId: $bookId){
-        id
+  mutation DeleteBookComment($id: ID!, $bookId: ID!) {
+    deleteBookComment(id: $id, bookId: $bookId) {
+      id
     }
-}
+  }
 `;
 
 export const ADD_PARAGRAPH_TO_BOOK = gql`
@@ -121,11 +121,11 @@ export const EDIT_PARAGRAPH = gql`
 `;
 
 export const DELETE_PARAGRAPH = gql`
-mutation DeleteParagraph($id: ID!, bookId: ID!){
-    deleteParagraph(id: $id, bookId: $bookId){
-        id
+  mutation DeleteParagraph($id: ID!, $bookId: ID!) {
+    deleteParagraph(id: $id, bookId: $bookId) {
+      id
     }
-}
+  }
 `;
 
 export const ADD_BOOK_GENRE = gql`
