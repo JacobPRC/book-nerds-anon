@@ -8,7 +8,7 @@ const Book = mongoose.model(
     title: String,
     about: String,
     createdAt: Date,
-    genre: { type: Schema.Types.ObjectId, ref: "genre" },
+    genre: String,
     likes: { type: Number, default: 0 },
     comments: [
       {
