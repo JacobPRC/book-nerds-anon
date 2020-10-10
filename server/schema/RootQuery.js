@@ -5,7 +5,13 @@ const Comment = require("../models/Comment");
 const Paragraph = require("../models/Paragraph");
 const Types = require("./Types");
 
-const { GraphQLObjectType, GraphQLID, GraphQLList, GraphQLNonNull } = graphql;
+const {
+  GraphQLObjectType,
+  GraphQLID,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLString,
+} = graphql;
 
 const { BookType, ParagraphType, CommentType } = Types;
 
@@ -23,6 +29,13 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
       resolve(parentValue, { id }) {
         return Book.findById(id);
+      },
+    },
+    bookByTitle: {
+      type: BookType,
+      args: { title: { type: new GraphQLNonNull(GraphQLString) } },
+      resolve(parentValue, { title }) {
+        return Book.findOne({ title });
       },
     },
     comment: {

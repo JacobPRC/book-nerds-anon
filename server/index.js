@@ -16,6 +16,9 @@ const app = express();
 //Maybe I can have users? This may be last "full stack" app for a bit since I want the nxt to b
 //JAM stack. So maybe these users can have a profile where it shows the books that they've liked and
 // small bio. But no nesting and whatnot. Sound good?
+
+//Also, just noticed that the GraphqLDate just changes every day for some reason so figure out how to
+// fix that shit
 mongoose.connect(
   keys.mongoURI,
   { useFindAndModify: false },

@@ -65,6 +65,12 @@ export default () => {
         <div className="ui primary submit button" onClick={(e) => onSubmit(e)}>
           Submit
         </div>
+        <div
+          className="ui negative submit button"
+          onClick={() => history.goBack()}
+        >
+          Exit
+        </div>
         <div className="ui error message"></div>
       </form>
     </>

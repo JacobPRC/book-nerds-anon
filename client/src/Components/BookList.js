@@ -37,9 +37,15 @@ export default () => {
   refetch();
 
   return (
-    <div>
+    <div style={{ paddingLeft: "10%" }}>
       <h1>BookList</h1>
       {renderBooks()}
+      <div>
+        <h4>Add new book</h4>
+        <Link to="/books/new">
+          <i className="plus icon"></i>
+        </Link>
+      </div>
     </div>
   );
 };
