@@ -1,6 +1,10 @@
-import React from "react";
-import { useQuery, gql } from "@apollo/client";
-import { Link, useHistory, useLocation, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useQuery, gql, useMutation } from "@apollo/client";
+import { Link, useHistory, useParams } from "react-router-dom";
+
+import Comment from "./Comment";
+import ActionButtons from "./ActionButtons";
+import Paragraph from "./Paragraph";
 
 export default () => {
   let params = useParams();
@@ -33,6 +37,7 @@ export default () => {
   if (error) return <h1>Error! {error.message}</h1>;
 
   const { title, genre, about, likes, comments, paragraphs } = data.book;
+  refetch();
 
   const renderParagraphs = () => {
     if (paragraphs.length < 1) {
@@ -41,11 +46,11 @@ export default () => {
 
     return paragraphs.map((p) => {
       return (
-        <>
-          <p>{p.content}</p>
-          <h4>Likes: {p.likes}</h4>
-          <h4>{p.createdAt}</h4>
-        </>
+        <Paragraph
+          content={p.content}
+          likes={p.likes}
+          createdAt={p.createdAt}
+        />
       );
     });
   };
@@ -56,16 +61,7 @@ export default () => {
     }
 
     return comments.map((comment) => {
-      return (
-        <>
-          <div class="ui list">
-            <div className="item">
-              <div className="header">{comment.comment}</div>
-              likes: {comment.likes}
-            </div>
-          </div>
-        </>
-      );
+      return <Comment comment={comment.comment} likes={comment.likes} />;
     });
   };
 
@@ -81,6 +77,7 @@ export default () => {
       <br />
       {comments.length < 1 ? null : <h2>Comments:</h2>}
       {renderComments()}
+      <ActionButtons id={params.id} query={FETCH_BOOK} />
       <div
         className="ui negative submit button"
         onClick={() => history.goBack()}
@@ -88,12 +85,9 @@ export default () => {
         Back to the list
       </div>
     </div>
-    // <div style={{ paddingLeft: "10%" }}>
-    //   <h1>{title}</h1>
-    //   <p>genre: {genre}</p>
-    //   <p>{about}</p>
-    //   <p>likes: {likes}</p>
-    //
-    // </div>
   );
 };
+
+//bc of action button component, the add p and and comment will probs just return true or false
+//I will need this component to read it and decide to render a form or not.
+//kinda like render comment/p funcs
