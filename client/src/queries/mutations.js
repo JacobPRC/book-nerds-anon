@@ -105,7 +105,7 @@ export const DELETE_BOOK_COMMENT = gql`
 `;
 
 export const ADD_PARAGRAPH_TO_BOOK = gql`
-  mutation AddParagraphToBook($id: ID!, $content: content) {
+  mutation AddParagraphToBook($id: ID!, $content: String!) {
     addParagraphToBook(id: $id, content: $content) {
       id
     }
@@ -113,7 +113,7 @@ export const ADD_PARAGRAPH_TO_BOOK = gql`
 `;
 
 export const EDIT_PARAGRAPH = gql`
-  mutation editParagraph($id: ID!, $content: content) {
+  mutation editParagraph($id: ID!, $content: String!) {
     editParagraph(id: $id, content: $content) {
       id
     }

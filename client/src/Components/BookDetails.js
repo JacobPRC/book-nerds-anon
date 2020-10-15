@@ -5,8 +5,16 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import Comment from "./Comment";
 import ActionButtons from "./ActionButtons";
 import Paragraph from "./Paragraph";
+import EmbeddedForm from "./EmbeddedForm";
+import Popup from "./PopUp";
+import { useModal } from "../hooks/useModal";
+import { ADD_PARAGRAPH_TO_BOOK } from "../queries/mutations";
 
 export default () => {
+  const [showCommentForm, setShowCommentForm] = useState(false);
+  const { isShowing, toggle } = useModal();
+  const [addParagraph] = useMutation(ADD_PARAGRAPH_TO_BOOK);
+
   let params = useParams();
   let history = useHistory();
 
@@ -17,14 +25,17 @@ export default () => {
       genre
       about
       likes
+      id
       comments {
         comment
+        id
         likes
         createdAt
       }
       paragraphs {
         content
         likes
+        id
         createdAt
       }
     }
@@ -50,6 +61,9 @@ export default () => {
           content={p.content}
           likes={p.likes}
           createdAt={p.createdAt}
+          id={p.id}
+          query={FETCH_BOOK}
+          bookId={data.book.id}
         />
       );
     });
@@ -61,8 +75,38 @@ export default () => {
     }
 
     return comments.map((comment) => {
-      return <Comment comment={comment.comment} likes={comment.likes} />;
+      return (
+        <Comment
+          comment={comment.comment}
+          likes={comment.likes}
+          query={FETCH_BOOK}
+          id={comment.id}
+          bookId={data.book.id}
+        />
+      );
     });
+  };
+
+  const newParagraph = (content) => {
+    const { id } = data.book;
+    addParagraph({
+      variables: { id, content },
+      refetchQueries: FETCH_BOOK,
+    }).then(() => toggle());
+  };
+
+  const showCommentFormFunc = () => {
+    if (!showCommentForm) {
+      return;
+    }
+    if (showCommentForm)
+      return (
+        <EmbeddedForm
+          showCommentForm={() => setShowCommentForm(!showCommentForm)}
+          id={params.id}
+          query={FETCH_BOOK}
+        />
+      );
   };
 
   return (
@@ -74,10 +118,40 @@ export default () => {
       <br />
       {paragraphs.length < 1 ? null : <h2>Paragraphs:</h2>}
       {renderParagraphs()}
+      <div
+        className="ui icon button"
+        data-tooltip="Add paragraph"
+        data-inverted=""
+        onClick={toggle}
+      >
+        <i className="plus icon"></i>
+        <Popup
+          action={newParagraph}
+          isShowing={isShowing}
+          hide={toggle}
+          text="Write your next masterpiece"
+          buttonText="Add"
+          color="primary"
+          paragraph={true}
+        />
+      </div>
       <br />
-      {comments.length < 1 ? null : <h2>Comments:</h2>}
-      {renderComments()}
-      <ActionButtons id={params.id} query={FETCH_BOOK} />
+      <div style={{ border: "2px solid black" }}>
+        {comments.length < 1 ? null : <h2>Comments:</h2>}
+        {renderComments()}
+        {showCommentFormFunc()}
+      </div>
+      <br />
+      <hr />
+      <div style={{ padding: "5%" }}>
+        <ActionButtons
+          id={params.id}
+          query={FETCH_BOOK}
+          showCommentForm={() => setShowCommentForm(!showCommentForm)}
+          parent="book"
+        />
+      </div>
+      <hr />
       <div
         className="ui negative submit button"
         onClick={() => history.goBack()}

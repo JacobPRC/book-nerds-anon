@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
+import "../app.css";
+
 import HomePage from "./HomePage";
 import BookDetails from "./BookDetails";
 import NewBookForm from "./NewBookForm";
