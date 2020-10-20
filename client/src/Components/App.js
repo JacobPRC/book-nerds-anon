@@ -8,8 +8,8 @@ import BookDetails from "./BookDetails";
 import NewBookForm from "./NewBookForm";
 import BookList from "./BookList";
 import Header from "./Header";
-import ErrorPage from "./ErrorPage";
 import PopUp from "./PopUp";
+import ParagraphForm from "./ParagraphForm";
 
 export default () => {
   return (
@@ -22,6 +22,11 @@ export default () => {
           <Route path="/books/new" exact component={NewBookForm} />
           <Route path="/books/:id" exact component={BookDetails} />
           <Route path="/books/error" exact component={PopUp} />
+          <Route
+            path="/books/:id/new-paragraph"
+            exact
+            component={ParagraphForm}
+          />
         </Switch>
       </BrowserRouter>
     </div>

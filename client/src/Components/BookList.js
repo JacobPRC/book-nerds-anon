@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
 import { FETCH_BOOKS } from "../queries/queries";
+import ErrorPage from "./ErrorPage";
 
 export default () => {
   const { loading, error, data, refetch } = useQuery(FETCH_BOOKS);
@@ -32,7 +33,13 @@ export default () => {
   };
 
   if (loading) return <h1>Loading...</h1>;
-  if (error) return <h1>Error! {error.message}</h1>;
+  if (error)
+    return (
+      <ErrorPage
+        header="Whoops! looks like we ran into a problem!"
+        btnText="Let's try this again"
+      />
+    );
 
   refetch();
 

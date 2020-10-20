@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 import { ADD_BOOK } from "../queries/mutations";
 
@@ -11,6 +11,7 @@ export default () => {
   const [addBook] = useMutation(ADD_BOOK);
 
   let history = useHistory();
+  let location = useLocation();
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -21,6 +22,11 @@ export default () => {
     return alert("You need to agree to be a NeЯd ya nerd!");
   };
 
+  useEffect(
+    () => (location.state ? setTitle(location.state.search) : setTitle("")),
+    []
+  );
+
   return (
     <>
       <form className="ui form segment">
@@ -29,7 +35,7 @@ export default () => {
           <div className="field">
             <label>Title</label>
             <input
-              value={title}
+              value={location.state ? location.state.search : title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Book Title"
               name="title"

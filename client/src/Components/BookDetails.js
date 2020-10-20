@@ -8,12 +8,13 @@ import Paragraph from "./Paragraph";
 import EmbeddedForm from "./EmbeddedForm";
 import Popup from "./PopUp";
 import { useModal } from "../hooks/useModal";
-import { ADD_PARAGRAPH_TO_BOOK } from "../queries/mutations";
+import { DELETE_BOOK } from "../queries/mutations";
+import ErrorPage from "./ErrorPage";
 
 export default () => {
   const [showCommentForm, setShowCommentForm] = useState(false);
   const { isShowing, toggle } = useModal();
-  const [addParagraph] = useMutation(ADD_PARAGRAPH_TO_BOOK);
+  const [deleteBook] = useMutation(DELETE_BOOK);
 
   let params = useParams();
   let history = useHistory();
@@ -45,7 +46,7 @@ export default () => {
   const { loading, error, data, refetch } = useQuery(FETCH_BOOK);
 
   if (loading) return <h1>Loading...</h1>;
-  if (error) return <h1>Error! {error.message}</h1>;
+  if (error) return <ErrorPage />;
 
   const { title, genre, about, likes, comments, paragraphs } = data.book;
   refetch();
@@ -87,12 +88,10 @@ export default () => {
     });
   };
 
-  const newParagraph = (content) => {
-    const { id } = data.book;
-    addParagraph({
-      variables: { id, content },
-      refetchQueries: FETCH_BOOK,
-    }).then(() => toggle());
+  const removeBook = () => {
+    deleteBook({ variables: { id: data.book.id } }).then(() =>
+      history.push("/books")
+    );
   };
 
   const showCommentFormFunc = () => {
@@ -112,6 +111,17 @@ export default () => {
   return (
     <div className="ui raised very padded text container segment">
       <h1 className="ui header">{title}</h1>
+      <div
+        className="ui icon button"
+        data-tooltip="Delete Book"
+        data-inverted=""
+        onClick={toggle}
+      >
+        <i className="x icon"></i>
+        <Popup action={removeBook} isShowing={isShowing} hide={toggle} />
+      </div>
+      {/* // make this a component. Having 2 in same component is fucking this up */}
+      {/* //comments after buttons */}
       <h4>Likes: {likes}</h4>
       <h3 style={{ textAlign: "right" }}>Genre: {genre}</h3>
       <h3>{about}</h3>
@@ -124,16 +134,9 @@ export default () => {
         data-inverted=""
         onClick={toggle}
       >
-        <i className="plus icon"></i>
-        <Popup
-          action={newParagraph}
-          isShowing={isShowing}
-          hide={toggle}
-          text="Write your next masterpiece"
-          buttonText="Add"
-          color="primary"
-          paragraph={true}
-        />
+        <Link to={`/books/${params.id}/new-paragraph`}>
+          <i className="plus icon"></i>
+        </Link>
       </div>
       <br />
       <div style={{ border: "2px solid black" }}>

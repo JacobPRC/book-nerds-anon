@@ -32,7 +32,7 @@ export default () => {
       return;
     }
     if (!data.bookByTitle) {
-      return history.push("/books/404-title-not-found");
+      return history.push("/books/404-title-not-found", { newTitle: input });
     }
     if (data.bookByTitle.id) {
       return history.push(`/books/${data.bookByTitle.id}`);

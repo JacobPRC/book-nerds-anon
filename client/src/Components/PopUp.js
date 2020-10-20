@@ -1,25 +1,8 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-export default ({
-  isShowing,
-  hide,
-  action,
-  text,
-  buttonText,
-  color,
-  paragraph,
-}) => {
+export default ({ isShowing, hide, action, text, color, buttonText }) => {
   const [input, setInput] = useState("");
-
-  const renderTextArea = () => (
-    <textarea
-      type="text"
-      value={input}
-      onChange={(e) => setInput(e.target.value)}
-      placeholder="Make something beautiful..."
-    />
-  );
   return isShowing
     ? ReactDOM.createPortal(
         <React.Fragment>
@@ -45,7 +28,6 @@ export default ({
                 </button>
               </div>
               <h1>{text || "Are you sure you want to delete this?"}</h1>
-              {paragraph ? renderTextArea() : null}
               <button
                 onClick={() => action(input)}
                 className={`ui button ${color || "negative"}`}
