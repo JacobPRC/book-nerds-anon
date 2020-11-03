@@ -7,6 +7,15 @@ export default ({ showCommentForm, id, query }) => {
   const [addComment] = useMutation(ADD_COMMENT_TO_BOOK);
   const [input, setInput] = useState("");
 
+  const submitComment = () => {
+    return addComment({
+      variables: { id, comment: input },
+      refetchQueries: [{ query }],
+    })
+      .then(() => setInput(""))
+      .then(() => showCommentForm());
+  };
+
   return (
     <div className="ui input">
       <input
@@ -14,18 +23,14 @@ export default ({ showCommentForm, id, query }) => {
         placeholder="Write a comment..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") return submitComment();
+        }}
       />
       <button
         style={{ marginLeft: "2%" }}
         className="ui submit primary button"
-        onClick={() => {
-          addComment({
-            variables: { id, comment: input },
-            refetchQueries: [{ query }],
-          })
-            .then(() => setInput(""))
-            .then(() => showCommentForm());
-        }}
+        onClick={() => submitComment()}
       >
         Add
       </button>

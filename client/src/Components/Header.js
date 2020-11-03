@@ -58,6 +58,9 @@ export default () => {
               onChange={(e) => setInput(e.target.value)}
               type="text"
               placeholder="Search for a book!"
+              onKeyUp={(e) => {
+                if (e.key === "Enter") return onSubmit(e);
+              }}
             />
             <i onClick={(e) => onSubmit(e)} className="search link icon"></i>
           </div>

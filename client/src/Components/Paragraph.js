@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 
@@ -6,10 +6,12 @@ import { useModal } from "../hooks/useModal";
 import Popup from "./PopUp";
 import ActionButtons from "./ActionButtons";
 import { DELETE_PARAGRAPH } from "../queries/mutations";
+import Edit from "./Edit";
 
 export default ({ content, likes, createdAt, id, query, bookId }) => {
   const [deleteParagraph] = useMutation(DELETE_PARAGRAPH);
   const { isShowing, toggle } = useModal();
+  const [showEdit, setShowEdit] = useState(false);
 
   let history = useHistory();
 
@@ -17,14 +19,35 @@ export default ({ content, likes, createdAt, id, query, bookId }) => {
     deleteParagraph({
       variables: { id, bookId },
       refetchQueries: { query },
-    }).then(() => history.push(`/books/${bookId}`));
+    })
+      .then(() => history.push(`/books/${bookId}`))
+      .then(() => toggle());
+  };
+
+  const contentOrEdit = () => {
+    if (showEdit) {
+      return (
+        <Edit
+          title={content}
+          hide={() => setShowEdit(false)}
+          id={id}
+          parent={"paragraph"}
+        />
+      );
+    }
+    return content;
   };
 
   return (
     <>
       <p>
-        {content}{" "}
+        {contentOrEdit()}{" "}
         <i style={{ cursor: "pointer" }} className="x icon" onClick={toggle} />
+        <i
+          className="edit icon"
+          style={{ cursor: "pointer" }}
+          onClick={() => setShowEdit(true)}
+        />
         <Popup action={removeParagraph} isShowing={isShowing} hide={toggle} />
       </p>
       <h4>Likes: {likes}</h4>

@@ -23,6 +23,8 @@ export default ({ comment, likes, query, id, bookId }) => {
     }).then(() => toggle);
   };
 
+  const iconCheck = () => (likes >= 0 ? "thumbs up" : "thumbs down");
+
   return (
     <>
       <div class="ui list">
@@ -37,7 +39,7 @@ export default ({ comment, likes, query, id, bookId }) => {
             <Popup action={removeComment} isShowing={isShowing} hide={toggle} />
           </div>
           <div>
-            <i className="thumbs up icon" /> {likes}
+            <i className={`${iconCheck()} icon`} /> {likes}
           </div>
           <div style={{ width: "50%" }}>
             <ActionButtons parent="comment" query={query} id={id} />

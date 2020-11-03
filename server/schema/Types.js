@@ -25,6 +25,9 @@ const BookType = new GraphQLObjectType({
       type: GraphQLDate,
       resolve: () => new Date(),
     },
+    // JWT auth should work w/ seperate server. JWT is perf for that. Now it won't be a monolith!
+    //props should have seperate db as well so they don't rely on e/o
+    //should use RS256  aysymetrical public private key for this kind of setup
     genre: { type: GraphQLString },
     comments: {
       type: new GraphQLList(CommentType),

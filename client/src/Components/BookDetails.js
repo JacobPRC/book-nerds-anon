@@ -10,9 +10,11 @@ import Popup from "./PopUp";
 import { useModal } from "../hooks/useModal";
 import { DELETE_BOOK } from "../queries/mutations";
 import ErrorPage from "./ErrorPage";
+import Edit from "./Edit";
 
 export default () => {
   const [showCommentForm, setShowCommentForm] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const { isShowing, toggle } = useModal();
   const [deleteBook] = useMutation(DELETE_BOOK);
 
@@ -110,7 +112,21 @@ export default () => {
 
   return (
     <div className="ui raised very padded text container segment">
-      <h1 className="ui header">{title}</h1>
+      <h1 className="ui header">
+        {showEdit ? (
+          <Edit hide={() => setShowEdit(false)} title={title} id={params.id} />
+        ) : (
+          title
+        )}
+      </h1>
+      <div
+        className="ui icon button"
+        data-tooltip="Edit Title"
+        data-inverted=""
+        onClick={() => setShowEdit(true)}
+      >
+        <i className="edit icon"></i>
+      </div>
       <div
         className="ui icon button"
         data-tooltip="Delete Book"
@@ -120,30 +136,21 @@ export default () => {
         <i className="x icon"></i>
         <Popup action={removeBook} isShowing={isShowing} hide={toggle} />
       </div>
-      {/* // make this a component. Having 2 in same component is fucking this up */}
-      {/* //comments after buttons */}
       <h4>Likes: {likes}</h4>
       <h3 style={{ textAlign: "right" }}>Genre: {genre}</h3>
       <h3>{about}</h3>
       <br />
       {paragraphs.length < 1 ? null : <h2>Paragraphs:</h2>}
       {renderParagraphs()}
-      <div
-        className="ui icon button"
-        data-tooltip="Add paragraph"
-        data-inverted=""
-        onClick={toggle}
-      >
-        <Link to={`/books/${params.id}/new-paragraph`}>
+      <Link to={`/books/${params.id}/new-paragraph`}>
+        <div
+          className="ui icon button"
+          data-tooltip="Add paragraph"
+          data-inverted=""
+        >
           <i className="plus icon"></i>
-        </Link>
-      </div>
-      <br />
-      <div style={{ border: "2px solid black" }}>
-        {comments.length < 1 ? null : <h2>Comments:</h2>}
-        {renderComments()}
-        {showCommentFormFunc()}
-      </div>
+        </div>
+      </Link>
       <br />
       <hr />
       <div style={{ padding: "5%" }}>
@@ -155,6 +162,12 @@ export default () => {
         />
       </div>
       <hr />
+      <div style={{ border: "2px solid black" }}>
+        {comments.length < 1 ? null : <h2>Comments:</h2>}
+        {renderComments()}
+        {showCommentFormFunc()}
+      </div>
+      <br />
       <div
         className="ui negative submit button"
         onClick={() => history.goBack()}
